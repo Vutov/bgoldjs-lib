@@ -62,8 +62,8 @@ BlockGold.fromBuffer = function (buffer) {
   block.solutionLength = readVarInt()
   block.solution = readSlice(block.solutionLength)
 
-  if(buffer.length == offset) {
-    return block;
+  if (buffer.length === offset) {
+    return block
   }
 
   function readTransaction () {
