@@ -33,7 +33,7 @@ Transaction.SIGHASH_ALL = 0x01
 Transaction.SIGHASH_NONE = 0x02
 Transaction.SIGHASH_SINGLE = 0x03
 Transaction.SIGHASH_ANYONECANPAY = 0x80
-Transaction.SIGHASH_BITCOINCASHBIP143 = 0x40
+Transaction.SIGHASH_FORKID = 0x40
 Transaction.ADVANCED_TRANSACTION_MARKER = 0x00
 Transaction.ADVANCED_TRANSACTION_FLAG = 0x01
 Transaction.FORKID_BTG = 0x4F // 79
@@ -420,7 +420,7 @@ Transaction.prototype.hashForCashSignature = function (inIndex, prevOutScript, i
   // it could be broken into two..
 
   // BIP143 sighash activated in BitcoinCash via 0x40 bit
-  if (hashType & Transaction.SIGHASH_BITCOINCASHBIP143) {
+  if (hashType & Transaction.SIGHASH_FORKID) {
     if (types.Null(inAmount)) {
       throw new Error('Bitcoin Cash sighash requires value of input to be signed.')
     }
@@ -441,15 +441,15 @@ Transaction.prototype.hashForGoldSignature = function (inIndex, prevOutScript, i
   // and pass it into the functions.
 
   var nForkHashType = hashType
-  var fUseForkId = (hashType & Transaction.SIGHASH_BITCOINCASHBIP143) > 0
+  var fUseForkId = (hashType & Transaction.SIGHASH_FORKID) > 0
   if (fUseForkId) {
     nForkHashType |= Transaction.FORKID_BTG << 8
   }
 
-  // BIP143 sighash activated in BitcoinCash via 0x40 bit
+  // BIP143 sighash activated in BitcoinCash and Bitcoin Gold via 0x40 bit
   if (sigVersion || fUseForkId) {
     if (types.Null(inAmount)) {
-      throw new Error('Bitcoin Cash sighash requires value of input to be signed.')
+      throw new Error('Bitcoin Cash / Bitcoin Gold sighash requires value of input to be signed.')
     }
     return this.hashForWitnessV0(inIndex, prevOutScript, inAmount, nForkHashType)
   } else {

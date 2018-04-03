@@ -27,7 +27,7 @@ describe('TransactionBuilder', function () {
     txb.enableBitcoinGold(true)
     txb.setVersion(2)
 
-    var hashType = Transaction.SIGHASH_ALL | Transaction.SIGHASH_BITCOINCASHBIP143
+    var hashType = Transaction.SIGHASH_ALL | Transaction.SIGHASH_FORKID
 
     txb.sign(0, keyPair, null, hashType, value)
 
