@@ -52,7 +52,7 @@ describe('BlockGold', function () {
     })
   })
 
-  describe('checkProofOfWork', function() {
+  describe('checkProofOfWork', function () {
     fixtures.validHex.forEach(function (f) {
       var block
 
