@@ -6,9 +6,9 @@ var BlockGold = require('../src/block_gold')
 var fixtures = require('./fixtures/block_gold')
 
 describe('BlockGold', function () {
-    var bufferToLittleEndian = function(buffer) {
-        return buffer.toString('hex').match(/.{2}/g).reverse().join("");
-    }
+  var bufferToLittleEndian = function (buffer) {
+    return buffer.toString('hex').match(/.{2}/g).reverse().join('')
+  }
 
   describe('fromBuffer/fromHex', function () {
     fixtures.valid.forEach(function (f) {

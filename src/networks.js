@@ -3,7 +3,7 @@
 
 module.exports = {
   bitcoingold: {
-    messagePrefix: '\x18Bitcoin Gold Signed Message:\n',
+    messagePrefix: '\x1DBitcoin Gold Signed Message:\n',
     bech32: 'btg',
     bip32: {
       public: 0x0488b21e,
@@ -14,7 +14,7 @@ module.exports = {
     wif: 0x80
   },
   bitcoingoldtestnet: {
-    messagePrefix: '\x18Bitcoin Gold Signed Message:\n',
+    messagePrefix: '\x1DBitcoin Gold Signed Message:\n',
     bech32: 'tbtg',
     bip32: {
       public: 0x043587cf,
