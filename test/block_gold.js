@@ -64,6 +64,11 @@ describe('BlockGold', function () {
         var pow = block.checkProofOfWork()
         assert.strictEqual(true, pow)
       })
+
+      it('imports no equihash' + f.description, function () {
+        var pow = block.checkProofOfWork(true)
+        assert.strictEqual(true, pow)
+      })
     })
   })
 })

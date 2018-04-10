@@ -147,14 +147,19 @@ BlockGold.prototype.toHex = function (headersOnly) {
   return this.toBuffer(headersOnly).toString('hex')
 }
 
-BlockGold.prototype.checkProofOfWork = function (network) {
+BlockGold.prototype.checkProofOfWork = function (validateSolution, network) {
   var hash = this.getHash().reverse()
   var target = Block.calculateTarget(this.bits)
+  var validTarget = hash.compare(target) <= 0
 
-  var equihash = new eq.Equihash(network || eq.networks.bitcoingold)
-  var header = this.toHex(true)
+  if (validateSolution) {
+    var header = this.toHex(true)
+    var equihash = new eq.Equihash(network || eq.networks.bitcoingold)
 
-  return hash.compare(target) <= 0 && equihash.verify(Buffer.from(header, 'hex'), this.solution)
+    return validTarget && equihash.verify(Buffer.from(header, 'hex'), this.solution)
+  }
+
+  return validTarget
 }
 
 module.exports = BlockGold
