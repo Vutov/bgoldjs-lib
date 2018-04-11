@@ -20,6 +20,7 @@ function BlockGold () {
   this.solutionLength = 0
   this.solution = null
   this.transactions = []
+  this.btgForkHeight = 491407
 }
 
 BlockGold.prototype = Object.create(Block.prototype)
@@ -152,14 +153,17 @@ BlockGold.prototype.checkProofOfWork = function (validateSolution, network) {
   var target = Block.calculateTarget(this.bits)
   var validTarget = hash.compare(target) <= 0
 
-  if (validateSolution) {
-    var header = this.toHex(true)
-    var equihash = new eq.Equihash(network || eq.networks.bitcoingold)
-
-    return validTarget && equihash.verify(Buffer.from(header, 'hex'), this.solution)
+  if (!validTarget) {
+    return false
   }
 
-  return validTarget
+  if (validateSolution && this.height >= this.btgForkHeight) {
+    var header = this.toHex(true)
+    var equihash = new eq.Equihash(network || eq.networks.bitcoingold)
+    return equihash.verify(Buffer.from(header, 'hex'), this.solution)
+  } else {
+    return true
+  }
 }
 
 module.exports = BlockGold
