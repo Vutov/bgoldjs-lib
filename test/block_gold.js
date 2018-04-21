@@ -2,6 +2,7 @@
 
 var assert = require('assert')
 var BlockGold = require('../src/block_gold')
+var networks = require('../src/networks')
 
 var fixtures = require('./fixtures/block_gold')
 
@@ -68,6 +69,21 @@ describe('BlockGold', function () {
       it('imports no equihash' + f.description, function () {
         var pow = block.checkProofOfWork(true)
         assert.strictEqual(true, pow)
+      })
+    })
+  })
+
+  describe('getHash', function () {
+    fixtures.valid.forEach(function (f) {
+      var block
+
+      beforeEach(function () {
+        block = BlockGold.fromHex(f.hex)
+      })
+
+      it('returns ' + f.hash + ' for ' + f.description, function () {
+        var network = networks[f.network]
+        assert.strictEqual(block.getHash(network).reverse().toString('hex'), f.hash)
       })
     })
   })

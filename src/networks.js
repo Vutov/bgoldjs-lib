@@ -11,7 +11,12 @@ module.exports = {
     },
     pubKeyHash: 0x26,
     scriptHash: 0x17,
-    wif: 0x80
+    wif: 0x80,
+    forkHeight: 491407,
+    equihash: {
+      n: 200,
+      k: 9
+    }
   },
   bitcoingoldtestnet: {
     messagePrefix: '\x1DBitcoin Gold Signed Message:\n',
@@ -22,7 +27,28 @@ module.exports = {
     },
     pubKeyHash: 0x6f,
     scriptHash: 0xc4,
-    wif: 0xef
+    wif: 0xef,
+    forkHeight: 1,
+    equihash: {
+      n: 48,
+      k: 5
+    }
+  },
+  bitcoingoldregtest: {
+    messagePrefix: '\x1DBitcoin Gold Signed Message:\n',
+    bech32: 'tbtg',
+    bip32: {
+      public: 0x043587cf,
+      private: 0x04358394
+    },
+    pubKeyHash: 0x6f,
+    scriptHash: 0xc4,
+    wif: 0xef,
+    forkHeight: 2000,
+    equihash: {
+      n: 48,
+      k: 5
+    }
   },
   bitcoin: {
     messagePrefix: '\x18Bitcoin Signed Message:\n',

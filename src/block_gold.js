@@ -2,7 +2,9 @@
 // https://github.com/BTCGPU/BTCGPU/wiki/Technical-Spec
 
 var Buffer = require('safe-buffer').Buffer
+var bcrypto = require('./crypto')
 var varuint = require('varuint-bitcoin')
+var networks = require('./networks')
 var eq = require('equihashjs-verify')
 
 var Transaction = require('./transaction')
@@ -20,7 +22,6 @@ function BlockGold () {
   this.solutionLength = 0
   this.solution = null
   this.transactions = []
-  this.btgForkHeight = 491407
 }
 
 BlockGold.prototype = Object.create(Block.prototype)
@@ -85,9 +86,15 @@ BlockGold.fromBuffer = function (buffer) {
   return block
 }
 
-BlockGold.prototype.byteLength = function (headersOnly) {
-  // Solution can have different size, for regtest/testnet is arround 140-170, for mainnet 1400-1500
-  var headerSize = 140 + varuint.encodingLength(this.solutionLength) + this.solution.length
+BlockGold.prototype.byteLength = function (headersOnly, useLegacyFormat) {
+  var headerSize = 0
+  if (useLegacyFormat) {
+    headerSize = 80
+  } else {
+    // Solution can have different size, for regtest/testnet is arround 140-170, for mainnet 1400-1500
+    headerSize = 140 + varuint.encodingLength(this.solutionLength) + this.solution.length
+  }
+
   if (headersOnly || !this.transactions) return headerSize
 
   return headerSize + varuint.encodingLength(this.transactions.length) + this.transactions.reduce(function (a, x) {
@@ -99,9 +106,21 @@ BlockGold.fromHex = function (hex) {
   return BlockGold.fromBuffer(Buffer.from(hex, 'hex'))
 }
 
+BlockGold.prototype.getHash = function (network) {
+  network = network || networks.bitcoingold
+  var useLegacyFormat = false
+
+  // Pre-Fork blocks
+  if (this.height < network.forkHeight) {
+    useLegacyFormat = true
+  }
+
+  return bcrypto.hash256(this.toBuffer(true, useLegacyFormat))
+}
+
 // TODO: buffer, offset compatibility
-BlockGold.prototype.toBuffer = function (headersOnly) {
-  var buffer = Buffer.allocUnsafe(this.byteLength(headersOnly))
+BlockGold.prototype.toBuffer = function (headersOnly, useLegacyFormat) {
+  var buffer = Buffer.allocUnsafe(this.byteLength(headersOnly, useLegacyFormat))
 
   var offset = 0
   function writeSlice (slice) {
@@ -121,14 +140,20 @@ BlockGold.prototype.toBuffer = function (headersOnly) {
   writeInt32(this.version)
   writeSlice(this.prevHash)
   writeSlice(this.merkleRoot)
-  writeInt32(this.height)
-  writeSlice(this.reserved)
-  writeUInt32(this.timestamp)
-  writeUInt32(this.bits)
-  writeSlice(this.nonce)
-  varuint.encode(this.solutionLength, buffer, offset)
-  offset += varuint.encode.bytes
-  writeSlice(this.solution)
+  if (useLegacyFormat) {
+    writeUInt32(this.timestamp)
+    writeUInt32(this.bits)
+    writeUInt32(this.nonce.slice(0, 4).readUInt32LE())
+  } else {
+    writeInt32(this.height)
+    writeSlice(this.reserved)
+    writeUInt32(this.timestamp)
+    writeUInt32(this.bits)
+    writeSlice(this.nonce)
+    varuint.encode(this.solutionLength, buffer, offset)
+    offset += varuint.encode.bytes
+    writeSlice(this.solution)
+  }
 
   if (headersOnly || !this.transactions) return buffer
 
@@ -144,11 +169,12 @@ BlockGold.prototype.toBuffer = function (headersOnly) {
   return buffer
 }
 
-BlockGold.prototype.toHex = function (headersOnly) {
-  return this.toBuffer(headersOnly).toString('hex')
+BlockGold.prototype.toHex = function (headersOnly, useLegacyFormat) {
+  return this.toBuffer(headersOnly, useLegacyFormat).toString('hex')
 }
 
 BlockGold.prototype.checkProofOfWork = function (validateSolution, network) {
+  network = network || networks.bitcoingold
   var hash = this.getHash().reverse()
   var target = Block.calculateTarget(this.bits)
   var validTarget = hash.compare(target) <= 0
@@ -157,9 +183,9 @@ BlockGold.prototype.checkProofOfWork = function (validateSolution, network) {
     return false
   }
 
-  if (validateSolution && this.height >= this.btgForkHeight) {
+  if (validateSolution && this.height >= network.forkHeight) {
     var header = this.toHex(true)
-    var equihash = new eq.Equihash(network || eq.networks.bitcoingold)
+    var equihash = new eq.Equihash(network.equihash || eq.networks.bitcoingold)
     return equihash.verify(Buffer.from(header, 'hex'), this.solution)
   } else {
     return true
