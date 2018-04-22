@@ -30,8 +30,8 @@ module.exports = {
     wif: 0xef,
     forkHeight: 1,
     equihash: {
-      n: 48,
-      k: 5
+      n: 200,
+      k: 9
     }
   },
   bitcoingoldregtest: {
