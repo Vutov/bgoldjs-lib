@@ -1,6 +1,6 @@
-# BitcoinJS (bitcoinjs-lib)
-[![Build Status](https://travis-ci.org/bitcoinjs/bitcoinjs-lib.png?branch=master)](https://travis-ci.org/bitcoinjs/bitcoinjs-lib)
-[![NPM](https://img.shields.io/npm/v/bitcoinjs-lib.svg)](https://www.npmjs.org/package/bitcoinjs-lib)
+# BitcoinGoldJS (bgoldjs-lib)
+[![Build Status](https://travis-ci.org/BTCGPU/bitcoinjs-lib.svg?branch=master)](https://travis-ci.org/BTCGPU/bitcoinjs-lib)
+[![NPM](https://img.shields.io/npm/v/bgoldjs-lib.svg)](https://www.npmjs.org/package/bgoldjs-lib)
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
@@ -29,13 +29,13 @@ Master is not stable; it is our development branch, and [only tagged releases ma
 
 ## Installation
 ``` bash
-npm install bitcoingoldjs-lib
+npm install bgoldjs-lib
 ```
 
 ## Setup
 ### Node.js
 ``` javascript
-var bitcoin = require('bitcoingoldjs-lib')
+var bitcoin = require('bgoldjs-lib')
 ```
 
 ### Browser
@@ -46,7 +46,7 @@ These steps are advisory only,  and may not be suitable for your application.
 
 For your project, create an `index.js` file
 ``` javascript
-let bitcoin = require('bitcoingoldjs-lib')
+let bitcoin = require('bgoldjs-lib')
 
 // your code here
 function myFunction () {
@@ -88,9 +88,9 @@ Type declarations for Typescript are available for version `^3.0.0` of the libra
 npm install @types/bitcoinjs-lib
 ```
 
-You can now use `bitcoinjs-lib` as a typescript compliant library.
+You can now use `bgoldjs-lib` as a typescript compliant library.
 ``` javascript
-import { HDNode, Transaction } from 'bitcoingoldjs-lib'
+import { HDNode, Transaction } from 'bgoldjs-lib'
 ```
 
 For VSCode (and other editors), users are advised to install the type declarations, as Intellisense uses that information to help you code (autocompletion, static analysis).

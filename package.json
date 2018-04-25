@@ -1,5 +1,5 @@
 {
-  "name": "bitcoingoldjs-lib",
+  "name": "bgoldjs-lib",
   "version": "3.3.2",
   "description": "Client-side Bitcoin Gold JavaScript library",
   "main": "./src/index.js",
