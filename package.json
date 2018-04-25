@@ -12,7 +12,8 @@
     "browserify",
     "javascript",
     "bitcoinjs",
-    "bitcoingoldjs"
+    "bitcoingoldjs",
+    "bgoldjs-lib"
   ],
   "scripts": {
     "coverage-report": "nyc report --reporter=lcov",
