@@ -185,7 +185,12 @@ BlockGold.prototype.checkProofOfWork = function (validateSolution, network) {
 
   if (validateSolution && this.height >= network.forkHeight) {
     var header = this.toHex(true)
-    var equihash = new eq.Equihash(network.equihash || eq.networks.bitcoingold)
+    var equihashParams = network.equihash || eq.networks.bitcoingold
+    if (network.equihash && network.equihash.equihashForkHeight && this.height <= network.equihash.equihashForkHeight) {
+      equihashParams = network.equihash.preEquihashFork
+    }
+
+    var equihash = new eq.Equihash(equihashParams)
     return equihash.verify(Buffer.from(header, 'hex'), this.solution)
   } else {
     return true
