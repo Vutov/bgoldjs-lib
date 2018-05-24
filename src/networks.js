@@ -14,8 +14,13 @@ module.exports = {
     wif: 0x80,
     forkHeight: 491407,
     equihash: {
-      n: 200,
-      k: 9
+      n: 144,
+      k: 5,
+      equihashForkHeight: 888888, // TODO Change once live
+      preEquihashFork: {
+        n: 200,
+        k: 9
+      }
     }
   },
   bitcoingoldtestnet: {
@@ -30,8 +35,8 @@ module.exports = {
     wif: 0xef,
     forkHeight: 1,
     equihash: {
-      n: 200,
-      k: 9
+      n: 96,
+      k: 5
     }
   },
   bitcoingoldregtest: {
@@ -46,7 +51,7 @@ module.exports = {
     wif: 0xef,
     forkHeight: 2000,
     equihash: {
-      n: 48,
+      n: 96,
       k: 5
     }
   },
