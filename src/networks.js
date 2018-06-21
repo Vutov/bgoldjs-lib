@@ -17,7 +17,7 @@ module.exports = {
       n: 144,
       k: 5,
       person: 'BgoldPoW',
-      equihashForkHeight: 888888, // TODO Change once live
+      equihashForkHeight: 536200,
       preEquihashFork: {
         n: 200,
         k: 9,
@@ -39,7 +39,13 @@ module.exports = {
     equihash: {
       n: 144,
       k: 5,
-      person: 'BgoldPoW'
+      person: 'BgoldPoW',
+      equihashForkHeight: 14300,
+      preEquihashFork: {
+        n: 200,
+        k: 9,
+        person: 'ZcashPoW'
+      }
     }
   },
   bitcoingoldregtest: {
