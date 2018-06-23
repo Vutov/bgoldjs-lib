@@ -62,13 +62,14 @@ describe('BlockGold', function () {
       })
 
       it('imports ' + f.description, function () {
-        var pow = block.checkProofOfWork()
+        var network = networks[f.network]
+        var pow = block.checkProofOfWork(true, network)
         assert.strictEqual(true, pow)
       })
 
       it('imports no equihash' + f.description, function () {
         var network = networks[f.network]
-        var pow = block.checkProofOfWork(true, network)
+        var pow = block.checkProofOfWork(false, network)
         assert.strictEqual(true, pow)
       })
     })
