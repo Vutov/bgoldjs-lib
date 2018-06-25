@@ -23,6 +23,16 @@ module.exports = {
         k: 9,
         person: 'ZcashPoW'
       }
+    },
+    lwma : {
+      testnet : false,
+      regtest : false,
+      powTargetSpacing : 600,
+      averagingWindow : 45,
+      adjustWeight : 13772,
+      minDenominator : 10,
+      solveTimeLimitation : true,
+      powLimit : "14134776517815698497336078495404605830980533548759267698564454644503805952"
     }
   },
   bitcoingoldtestnet: {
@@ -46,6 +56,16 @@ module.exports = {
         k: 9,
         person: 'ZcashPoW'
       }
+    },
+    lwma : {
+      testnet : true,
+      regtest : false,
+      powTargetSpacing : 600,
+      averagingWindow : 45,
+      adjustWeight : 13772,
+      minDenominator : 10,
+      solveTimeLimitation : false,
+      powLimit : "14134776518227074636666380005943348126619871175004951664972849610340958207"
     }
   },
   bitcoingoldregtest: {
@@ -63,6 +83,16 @@ module.exports = {
       n: 96,
       k: 5,
       person: 'BgoldPoW'
+    },
+    lwma : {
+      testnet : false,
+      regtest : true,
+      powTargetSpacing : 600,
+      averagingWindow : 45,
+      adjustWeight : 13772,
+      minDenominator : 10,
+      solveTimeLimitation : false,
+      powLimit : "57896044618658097711785492504343953926634992332820282019728792003956564819967"
     }
   },
   bitcoin: {

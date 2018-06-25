@@ -1,17 +1,4 @@
 var bitcoin = require("./src")
-var BigInteger = require('bigi')
-
-var network = bitcoin.networks.bitcoingoldtestnet
-// todo
-network.LWMA = {}
-network.LWMA.Testnet = true
-network.LWMA.Regtest = false
-network.LWMA.POW_TARGET_SPACING = 10 * 60
-network.LWMA.AVERAGING_WINDOW = 45
-network.LWMA.ADJUST_WEIGHT = 13772
-network.LWMA.MIN_DENOMINATOR = 10
-network.LWMA.SOLVETIME_LIMITATION = false
-network.LWMA.POW_LIMIT = "57896044618658097711785492504343953926634992332820282019728792003956564819967"
 
 //var blockHex = "00000020c9b6b94ff1e9888f50b3a000593f98a1aef9bc229112b0224b38253a6a6100003027e3d26d0efafc2782487889e8d011b08fed3a9bc69ea9a6a9147572cb6dfb053c000000000000000000000000000000000000000000000000000000000000313b2e5be4d0001fa3e308750000501f5c270000000000000000000000000000000000000000000b6400de21107cb59a6776adcad4f1a4fef9bb56bb0b1dc1a9a40e12a044f00d7bafa4badabe6765710503949475966b0578a8dc06159e677ac102531c1f33c1c381fb1bdab379252454a3813d2b2a667323b32b3a261e6634033c1fe472b10d98990bd49df401010000000001010000000000000000000000000000000000000000000000000000000000000000ffffffff3102053c005a2d4e4f4d50212068747470733a2f2f6769746875622e636f6d2f6a6f7368756179616275742f7a2d6e6f6d70ffffffff0380010b27010000001976a914969f38a90cc1475af0d33cbd19ee1bb3381d3f6888ac80f0fa02000000001976a9145801335042eed7b156235017e3408f550f233a3888ac0000000000000000266a24aa21a9ede2f61c3f71d1defd3fa999dfa36953755c690689799962b48bebd836974e8cf90120000000000000000000000000000000000000000000000000000000000000000000000000";
  var blockHex = "000000207a33c5c82c5f2d194ddde48f6f43f3872a24c1af268dfc8720416e60795600003076f313640466823789c4ff59b555dbfae23c361d932032b7cd6a5228651f663f3c000000000000000000000000000000000000000000000000000000000000198d2e5bf490001f9af4aada0000501e0a2609000000000000000000000000000000000000000004641c996554bf3ff9ec4e9dba70797a5266e8888b3566ebc747be2b01e8d47cbf0cfa1207ec053347af0f9394adb2d7ed71ecfa1d8a461332bdbabbfc5ec3959251a58929d2429f5a1f99edb632705665e841a23522b6fd29f53c426de016ab006cc9a90cca01010000000001010000000000000000000000000000000000000000000000000000000000000000ffffffff31023f3c005a2d4e4f4d50212068747470733a2f2f6769746875622e636f6d2f6a6f7368756179616275742f7a2d6e6f6d70ffffffff0380010b27010000001976a914969f38a90cc1475af0d33cbd19ee1bb3381d3f6888ac80f0fa02000000001976a9145801335042eed7b156235017e3408f550f233a3888ac0000000000000000266a24aa21a9ede2f61c3f71d1defd3fa999dfa36953755c690689799962b48bebd836974e8cf90120000000000000000000000000000000000000000000000000000000000000000000000000";
@@ -115,111 +102,12 @@ var prevBlockHex = [
 // ]
 
 var block = bitcoin.BlockGold.fromHex(blockHex)
-var prevBlocks = {}
-var itemCount = 0
-prevBlockHex && prevBlockHex.forEach(b => {
+var prevBlocks = []
+prevBlockHex.forEach(b => {
     var blockGold = bitcoin.BlockGold.fromHex(b)
-    prevBlocks[blockGold.height] = blockGold
-    itemCount += 1
+    prevBlocks.push(blockGold)
 })
 
-// <-- in method
-// todo check for lwma block
+var isValid = block.checkProofOfWork(true, bitcoin.networks.bitcoingoldtestnet, prevBlocks)
 
-if (itemCount <= network.LWMA.AVERAGING_WINDOW) {
-    throw new Error("LWMA need the last " + (network.LWMA.AVERAGING_WINDOW + 1) + " blocks to determine the next target")
-}
-
-// todo check all there
-
-var newTarget = getLwmaTarget(block, prevBlocks, network)
-var bits = targetToBits(newTarget)
-
-console.log(bits)
-console.log(block.bits)
-
-// todo cur = this
-function getLwmaTarget(cur, prevBlocks, network) {
-    var network = network || network.bitcoin
-    var weight = network.LWMA.ADJUST_WEIGHT
-    var height = cur.height
-    var prev = prevBlocks[height - 1]
-
-    //# Special testnet handling
-    if (network.LWMA.Regtest) {
-        return bitsToTarget(prev.bits)
-    }
-
-    var limitBig = new BigInteger(network.LWMA.POW_LIMIT.toString())
-    if (network.LWMA.Testnet && cur.timestamp > prev.timestamp + network.LWMA.POW_TARGET_SPACING * 2) {
-        return limitBig
-    }
-
-    var total = BigInteger.ZERO
-    var t = 0
-    var j = 0
-    var ts = 6 * network.LWMA.POW_TARGET_SPACING
-    var dividerBig = new BigInteger((weight * network.LWMA.AVERAGING_WINDOW * network.LWMA.AVERAGING_WINDOW).toString())
-
-    //# Loop through N most recent blocks.  "< height", not "<=".
-    //# height-1 = most recently solved block
-    for (var i = height - network.LWMA.AVERAGING_WINDOW; i < height; i++) {
-        cur = prevBlocks[i]
-        prev = prevBlocks[i - 1]
-
-        solvetime = cur.timestamp - prev.timestamp
-        if (network.LWMA.SOLVETIME_LIMITATION && solvetime > ts) {
-            solvetime = ts
-        }
-
-        j += 1
-        t += solvetime * j
-        var targetBig = bitsToTarget(cur.bits)
-        total = total.add(targetBig.divide(dividerBig))
-    }
-
-    //# Keep t reasonable in case strange solvetimes occurred.
-    if (t < Math.trunc(network.LWMA.AVERAGING_WINDOW * weight / network.LWMA.MIN_DENOMINATOR)) {
-        t = Math.trunc(network.LWMA.AVERAGING_WINDOW * weight / network.LWMA.MIN_DENOMINATOR)
-    }
-
-    var newTargetBig = total.multiply(new BigInteger(t.toString()))
-    if (newTargetBig.compareTo(limitBig) >= 0) {
-        newTargetBig = limitBig
-    }
-
-    return newTargetBig
-}
-
-function bitsToTarget(bits) {
-    var bitsBig = new BigInteger(bits.toString())
-    var size = bitsBig.shiftRight(24)
-    var word = bits & 0x007fffff
-
-    var wordBig = new BigInteger(word.toString())
-    if (size <= 3) {
-        return wordBig.shiftRight(8 * (3 - size))
-    }
-
-    return wordBig.shiftLeft(8 * (size - 3))
-}
-
-function targetToBits(target) {
-    var nsize = Math.trunc((target.bitLength() + 7) / 8)
-    var c = BigInteger.ZERO
-
-    if (nsize <= 3) {
-        c = target.shiftLeft(8 * (3 - nsize))
-    } else {
-        c = target.shiftRight(8 * (nsize - 3))
-    }
-
-    c = Number(c.toString())
-    if (c & 0x00800000) {
-        c >>= 8
-        nsize += 1
-    }
-
-    c |= nsize << 24
-    return c
-}
+console.log(isValid)

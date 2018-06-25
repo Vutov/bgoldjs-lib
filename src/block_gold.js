@@ -6,6 +6,7 @@ var bcrypto = require('./crypto')
 var varuint = require('varuint-bitcoin')
 var networks = require('./networks')
 var eq = require('equihashjs-verify')
+var lwma = require('./lwma')
 
 var Transaction = require('./transaction')
 var Block = require('./block')
@@ -173,11 +174,17 @@ BlockGold.prototype.toHex = function (headersOnly, useLegacyFormat) {
   return this.toBuffer(headersOnly, useLegacyFormat).toString('hex')
 }
 
-BlockGold.prototype.checkProofOfWork = function (validateSolution, network) {
+BlockGold.prototype.checkProofOfWork = function (validateSolution, network, previousBlocks) {
   network = network || networks.bitcoingold
-  var hash = this.getHash().reverse()
-  var target = Block.calculateTarget(this.bits)
-  var validTarget = hash.compare(target) <= 0
+  var validTarget = false
+  if (this.height >= network.forkHeight) {
+    var bits = lwma.calcNextBits(this, previousBlocks, network.lwma)
+    validTarget = this.bits === bits
+  } else {
+    var hash = this.getHash().reverse()
+    var target = Block.calculateTarget(this.bits)
+    validTarget = hash.compare(target) <= 0
+  }
 
   if (!validTarget) {
     return false
