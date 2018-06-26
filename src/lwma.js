@@ -11,7 +11,7 @@ function calcNextBits(currentBlock, previousBlocks, lwmaConfig) {
         prevBlocks[b.height] = b
     })
 
-    for(var i = currentBlock.height - lwmaConfig.averagingWindow; i < currentBlock.height; i++) {
+    for(var i = currentBlock.height - lwmaConfig.averagingWindow - 1; i < currentBlock.height; i++) {
         if(!prevBlocks[i]){
             throw new Error("Block with height " + i + " is missing, cannot calculate next target")
         }

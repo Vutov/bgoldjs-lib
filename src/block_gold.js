@@ -177,7 +177,7 @@ BlockGold.prototype.toHex = function (headersOnly, useLegacyFormat) {
 BlockGold.prototype.checkProofOfWork = function (validateSolution, network, previousBlocks) {
   network = network || networks.bitcoingold
   var validTarget = false
-  if (this.height >= network.forkHeight) {
+  if (network.lwma && this.height >= network.lwma.enableHeight) {
     var bits = lwma.calcNextBits(this, previousBlocks, network.lwma)
     validTarget = this.bits === bits
   } else {

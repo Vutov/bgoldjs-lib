@@ -63,14 +63,42 @@ describe('BlockGold', function () {
 
       it('imports ' + f.description, function () {
         var network = networks[f.network]
-        var pow = block.checkProofOfWork(true, network)
-        assert.strictEqual(true, pow)
+        var isValid = false
+        if (f.prevBlocksHex) // LWMA need the last 46 blocks to determine the next target
+        {
+          var prevBlocks = []
+          f.prevBlocksHex.forEach(b => {
+            var blockGold = BlockGold.fromHex(b)
+            prevBlocks.push(blockGold)
+          })
+
+          isValid = block.checkProofOfWork(true, network, prevBlocks)
+        }
+        else {
+          isValid = block.checkProofOfWork(true, network)
+        }
+
+        assert.strictEqual(true, isValid)
       })
 
       it('imports no equihash' + f.description, function () {
         var network = networks[f.network]
-        var pow = block.checkProofOfWork(false, network)
-        assert.strictEqual(true, pow)
+        var isValid = false
+        if (f.prevBlocksHex) // LWMA need the last 46 blocks to determine the next target
+        {
+          var prevBlocks = []
+          f.prevBlocksHex.forEach(b => {
+            var blockGold = BlockGold.fromHex(b)
+            prevBlocks.push(blockGold)
+          })
+
+          isValid = block.checkProofOfWork(false, network, prevBlocks)
+        }
+        else {
+          isValid = block.checkProofOfWork(false, network)
+        }
+
+        assert.strictEqual(true, isValid)
       })
     })
   })

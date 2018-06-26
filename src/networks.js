@@ -25,6 +25,7 @@ module.exports = {
       }
     },
     lwma : {
+      enableHeight : 536200,
       testnet : false,
       regtest : false,
       powTargetSpacing : 600,
@@ -58,6 +59,7 @@ module.exports = {
       }
     },
     lwma : {
+      enableHeight : 14300,
       testnet : true,
       regtest : false,
       powTargetSpacing : 600,
@@ -85,6 +87,7 @@ module.exports = {
       person: 'BgoldPoW'
     },
     lwma : {
+      enableHeight : 0,
       testnet : false,
       regtest : true,
       powTargetSpacing : 600,
