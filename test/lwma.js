@@ -1,4 +1,4 @@
-/* global describe, it, beforeEach */
+/* global describe, it */
 
 var assert = require('assert')
 var BlockGold = require('../src/block_gold')
@@ -35,8 +35,8 @@ describe('lwma', function () {
         })
 
         try {
-          var bits = lwma.calcNextBits(block, prevBlocks, network.lwma)
-          throw new Error("caclNextBits did not throw exception")
+          lwma.calcNextBits(block, prevBlocks, network.lwma)
+          throw new Error('caclNextBits did not throw exception')
         } catch (ex) {
           assert.strictEqual(ex.message, f.message)
         }

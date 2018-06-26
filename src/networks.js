@@ -24,16 +24,16 @@ module.exports = {
         person: 'ZcashPoW'
       }
     },
-    lwma : {
-      enableHeight : 536200,
-      testnet : false,
-      regtest : false,
-      powTargetSpacing : 600,
-      averagingWindow : 45,
-      adjustWeight : 13772,
-      minDenominator : 10,
-      solveTimeLimitation : true,
-      powLimit : "14134776517815698497336078495404605830980533548759267698564454644503805952"
+    lwma: {
+      enableHeight: 536200,
+      testnet: false,
+      regtest: false,
+      powTargetSpacing: 600,
+      averagingWindow: 45,
+      adjustWeight: 13772,
+      minDenominator: 10,
+      solveTimeLimitation: true,
+      powLimit: '14134776517815698497336078495404605830980533548759267698564454644503805952'
     }
   },
   bitcoingoldtestnet: {
@@ -58,16 +58,16 @@ module.exports = {
         person: 'ZcashPoW'
       }
     },
-    lwma : {
-      enableHeight : 14300,
-      testnet : true,
-      regtest : false,
-      powTargetSpacing : 600,
-      averagingWindow : 45,
-      adjustWeight : 13772,
-      minDenominator : 10,
-      solveTimeLimitation : false,
-      powLimit : "14134776518227074636666380005943348126619871175004951664972849610340958207"
+    lwma: {
+      enableHeight: 14300,
+      testnet: true,
+      regtest: false,
+      powTargetSpacing: 600,
+      averagingWindow: 45,
+      adjustWeight: 13772,
+      minDenominator: 10,
+      solveTimeLimitation: false,
+      powLimit: '14134776518227074636666380005943348126619871175004951664972849610340958207'
     }
   },
   bitcoingoldregtest: {
@@ -86,16 +86,16 @@ module.exports = {
       k: 5,
       person: 'BgoldPoW'
     },
-    lwma : {
-      enableHeight : 0,
-      testnet : false,
-      regtest : true,
-      powTargetSpacing : 600,
-      averagingWindow : 45,
-      adjustWeight : 13772,
-      minDenominator : 10,
-      solveTimeLimitation : false,
-      powLimit : "57896044618658097711785492504343953926634992332820282019728792003956564819967"
+    lwma: {
+      enableHeight: 0,
+      testnet: false,
+      regtest: true,
+      powTargetSpacing: 600,
+      averagingWindow: 45,
+      adjustWeight: 13772,
+      minDenominator: 10,
+      solveTimeLimitation: false,
+      powLimit: '57896044618658097711785492504343953926634992332820282019728792003956564819967'
     }
   },
   bitcoin: {

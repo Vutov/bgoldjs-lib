@@ -22,7 +22,8 @@
     "integration": "mocha test/integration/",
     "standard": "standard",
     "test": "npm run standard && npm run coverage",
-    "unit": "mocha"
+    "unit": "mocha",
+    "fix": "standard --fix"
   },
   "repository": {
     "type": "git",
