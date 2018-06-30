@@ -177,6 +177,8 @@ BlockGold.prototype.toHex = function (headersOnly, useLegacyFormat) {
 BlockGold.prototype.checkProofOfWork = function (validateSolution, network, previousBlocks) {
   network = network || networks.bitcoingold
   var validTarget = false
+
+  // Testnet with old lwma params are not supported yet, if needed to validate such blocks - add new network in Network.js
   if (network.lwma && this.height >= network.lwma.enableHeight) {
     var bits = lwma.calcNextBits(this, previousBlocks, network.lwma)
     validTarget = this.bits === bits
